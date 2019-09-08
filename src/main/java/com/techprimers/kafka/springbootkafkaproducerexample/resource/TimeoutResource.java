@@ -10,30 +10,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("kafka")
-public class UserResource {
+@RequestMapping("timeout")
+public class TimeoutResource {
 
-    @Autowired
-    private KafkaTemplate<String, User> kafkaTemplate;
 
-    private static final String TOPIC = "Kafka_Example";
-
-    @GetMapping("/publish/{name}")
-    public String post(@PathVariable("name") final String name) {
-
-        kafkaTemplate.send(TOPIC, new User(name, "Technology", 12000L));
-
-        return "Published successfully";
-    }
-
-    @PostMapping("/timeout/{seconds}")
+    @PostMapping("/{seconds}")
     public String timeout(@PathVariable("seconds") final String seconds) {
 
         try {
             int millissleep = Integer.parseInt(seconds) * 1000;
             Thread.sleep(millissleep);
             return String.format("I slept %s seconds", seconds);
-
         } catch ( InterruptedException e) {
             e.printStackTrace();
         } catch ( NumberFormatException e ) {
